@@ -1,12 +1,19 @@
 package com.atguigu.shopping_0224.home.fragment;
 
-import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.base.BaseFragment;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * 作者：田学伟 on 2017/6/2 19:41
@@ -15,15 +22,23 @@ import com.atguigu.shopping_0224.base.BaseFragment;
  */
 
 public class HomeFragment extends BaseFragment {
-    private TextView textView;
+
+    @InjectView(R.id.ll_main_scan)
+    LinearLayout llMainScan;
+    @InjectView(R.id.tv_search_home)
+    TextView tvSearchHome;
+    @InjectView(R.id.tv_message_home)
+    TextView tvMessageHome;
+    @InjectView(R.id.rv_home)
+    RecyclerView rvHome;
+    @InjectView(R.id.ib_top)
+    ImageButton ibTop;
 
     @Override
     public View initView() {
-        textView = new TextView(mContext);
-        textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.RED);
-        return textView;
+        View view = View.inflate(mContext, R.layout.fragment_home, null);
+        ButterKnife.inject(this, view);
+        return view;
     }
 
     /**
@@ -34,6 +49,27 @@ public class HomeFragment extends BaseFragment {
     public void initData() {
         super.initData();
         Log.e("TAG", "主页的数据被初始化了...");
-        textView.setText("主页内容");
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
+
+    @OnClick({R.id.tv_search_home, R.id.tv_message_home, R.id.ib_top})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_search_home:
+                Toast.makeText(mContext, "搜索", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_message_home:
+                Toast.makeText(mContext, "消息", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ib_top:
+                Toast.makeText(mContext, "回到顶部", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
