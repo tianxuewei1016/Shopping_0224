@@ -38,7 +38,7 @@ public class ViewPagerAdapter extends PagerAdapter{
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(mContext)
@@ -46,11 +46,30 @@ public class ViewPagerAdapter extends PagerAdapter{
                 .into(imageView);
         //添加到ViewPager容器中
         container.addView(imageView);
+
+        //设置点击事件
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null) {
+                    listener.onItemClick(v,position);
+                }
+            }
+        });
+
         return imageView;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    public interface OnItemClickListener{
+        public void onItemClick(View v,int position);
+    }
+    private OnItemClickListener listener;
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
 }

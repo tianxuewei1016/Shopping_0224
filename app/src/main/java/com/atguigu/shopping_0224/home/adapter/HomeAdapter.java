@@ -235,6 +235,12 @@ public class HomeAdapter extends RecyclerView.Adapter {
             actViewpager.setPageTransformer(true,new RotateYTransformer());
 
             //设置item的点击事件
+            adapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
