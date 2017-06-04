@@ -2,6 +2,7 @@ package com.atguigu.shopping_0224.home.adapter;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shopping_0224.R;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.iwgang.countdownview.CountdownView;
 
 /**
  * 作者：田学伟 on 2017/6/4 13:07
@@ -111,6 +114,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (viewType == ACT) {
             return new ActViewHolder(mContext, inflater.inflate(R.layout.act_item, null));
         } else if (viewType == SECKILL) {
+            return new SeckillViewHolder(mContext, inflater.inflate(R.layout.seckill_item, null));
         } else if (viewType == RECOMMEND) {
         } else if (viewType == HOT) {
         }
@@ -132,16 +136,19 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (getItemViewType(position) == CHANNEL) {
             ChannelViewHolder viewHolder = (ChannelViewHolder) holder;
             viewHolder.setData(result.getChannel_info());
-        }else if(getItemViewType(position)==ACT) {
+        } else if (getItemViewType(position) == ACT) {
             ActViewHolder viewHolder = (ActViewHolder) holder;
             viewHolder.setData(result.getAct_info());
+        } else if (getItemViewType(position) == SECKILL) {
+            SeckillViewHolder viewHolder = (SeckillViewHolder) holder;
+            viewHolder.setData(result.getSeckill_info());
         }
     }
 
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 3;
+        return 4;
     }
 
     class BannerViewHolder extends RecyclerView.ViewHolder {
@@ -217,30 +224,55 @@ public class HomeAdapter extends RecyclerView.Adapter {
         @InjectView(R.id.act_viewpager)
         ViewPager actViewpager;
         ViewPagerAdapter adapter;
+
         public ActViewHolder(Context mContext, View inflate) {
             super(inflate);
-            ButterKnife.inject(this,inflate);
+            ButterKnife.inject(this, inflate);
 
         }
 
         public void setData(List<HomeBean.ResultEntity.ActInfoEntity> act_info) {
             //1.设置ViewPager的适配器
-            adapter = new ViewPagerAdapter(mContext,act_info);
+            adapter = new ViewPagerAdapter(mContext, act_info);
 
             //美化ViewPager库
             actViewpager.setPageMargin(20);//设置page间间距，自行根据需求设置
             actViewpager.setOffscreenPageLimit(3);
             actViewpager.setAdapter(adapter);
             //setPageTransformer 决定动画效果
-            actViewpager.setPageTransformer(true,new RotateYTransformer());
+            actViewpager.setPageTransformer(true, new RotateYTransformer());
 
             //设置item的点击事件
             adapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
-                    Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    class SeckillViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.countdownview)
+        CountdownView countdownview;
+        @InjectView(R.id.tv_more_seckill)
+        TextView tvMoreSeckill;
+        @InjectView(R.id.rv_seckill)
+        RecyclerView rvSeckill;
+        SeckillRecyclerViewAdapter adapter;
+
+        public SeckillViewHolder(Context mContext, View inflate) {
+            super(inflate);
+            ButterKnife.inject(this, inflate);
+        }
+
+        public void setData(HomeBean.ResultEntity.SeckillInfoEntity seckill_info) {
+            //1.设置RecyclerView的适配
+            adapter = new SeckillRecyclerViewAdapter(mContext, seckill_info);
+            rvSeckill.setAdapter(adapter);
+            //2.设置布局管理器
+            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            //3.设置点击事件
         }
     }
 }
