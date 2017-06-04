@@ -273,6 +273,12 @@ public class HomeAdapter extends RecyclerView.Adapter {
             //2.设置布局管理器
             rvSeckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
             //3.设置点击事件
+            adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    Toast.makeText(mContext, "postion=="+position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
