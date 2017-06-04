@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.home.bean.HomeBean;
+import com.atguigu.shopping_0224.home.view.MyGridView;
 import com.atguigu.shopping_0224.utils.Constants;
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
@@ -77,6 +78,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
      */
     public int currentType = BANNER;
 
+
     @Override
     public int getItemViewType(int position) {
         if (position == BANNER) {
@@ -117,6 +119,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (viewType == RECOMMEND) {
             return new RecommendViewHolder(mContext, inflater.inflate(R.layout.recommend_item, null));
         } else if (viewType == HOT) {
+            return new HotViewHolder(mContext, inflater.inflate(R.layout.hot_item, null));
         }
         return null;
     }
@@ -145,13 +148,16 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (getItemViewType(position) == RECOMMEND) {
             RecommendViewHolder viewHolder = (RecommendViewHolder) holder;
             viewHolder.setData(result.getRecommend_info());
+        } else if (getItemViewType(position) == HOT) {
+            HotViewHolder viewHolder = (HotViewHolder) holder;
+            viewHolder.setData(result.getHot_info());
         }
     }
 
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 5;
+        return 6;
     }
 
     class BannerViewHolder extends RecyclerView.ViewHolder {
@@ -309,9 +315,29 @@ public class HomeAdapter extends RecyclerView.Adapter {
             gvRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "postion=="+recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "postion==" + recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    class HotViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.tv_more_hot)
+        TextView tvMoreHot;
+        @InjectView(R.id.gv_hot)
+        MyGridView gvHot;
+        HotGridViewAdapter adapter;
+
+        public HotViewHolder(Context mContext, View inflate) {
+            super(inflate);
+            ButterKnife.inject(this,inflate);
+        }
+
+        public void setData(List<HomeBean.ResultEntity.HotInfoEntity> hot_info) {
+            //1.设置适配器
+            adapter = new HotGridViewAdapter(mContext,hot_info);
+            gvHot.setAdapter(adapter);
+            //2.设置item的点击事件
         }
     }
 }
