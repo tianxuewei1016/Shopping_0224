@@ -1,6 +1,7 @@
 package com.atguigu.shopping_0224.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shopping_0224.R;
+import com.atguigu.shopping_0224.home.activity.GoodsInfoActivity;
+import com.atguigu.shopping_0224.home.bean.GoodsBean;
 import com.atguigu.shopping_0224.home.bean.HomeBean;
 import com.atguigu.shopping_0224.home.view.MyGridView;
 import com.atguigu.shopping_0224.utils.Constants;
@@ -38,6 +41,7 @@ import cn.iwgang.countdownview.CountdownView;
  */
 
 public class HomeAdapter extends RecyclerView.Adapter {
+    public static final String GOODS_BEAN = "goodsBean";
     private final Context mContext;
     private final HomeBean.ResultEntity result;
 /**
@@ -196,8 +200,10 @@ public class HomeAdapter extends RecyclerView.Adapter {
             banner.setOnBannerListener(new OnBannerListener() {
                 @Override
                 public void OnBannerClick(int position) {
-                    int realPosition = position - 1;
-                    Toast.makeText(mContext, "realPosition==" + realPosition, Toast.LENGTH_SHORT).show();
+//                    int realPosition = position - 1;
+//                    Toast.makeText(mContext, "realPosition==" + realPosition, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    mContext.startActivity(intent);
                 }
             });
         }
@@ -315,7 +321,18 @@ public class HomeAdapter extends RecyclerView.Adapter {
             gvRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "postion==" + recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "postion==" + recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    HomeBean.ResultEntity.RecommendInfoEntity infoEntity = recommend_info.get(position);
+                    //传递数据
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setName(infoEntity.getName());
+                    goodsBean.setCover_price(infoEntity.getCover_price());
+                    goodsBean.setFigure(infoEntity.getFigure());
+                    goodsBean.setProduct_id(infoEntity.getProduct_id());
+
+                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    intent.putExtra(GOODS_BEAN, goodsBean);
+                    mContext.startActivity(intent);
                 }
             });
         }
