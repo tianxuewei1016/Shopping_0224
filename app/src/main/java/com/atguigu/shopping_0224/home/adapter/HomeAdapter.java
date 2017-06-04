@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,6 +21,9 @@ import com.youth.banner.transformer.BackgroundToForegroundTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * 作者：田学伟 on 2017/6/4 13:07
@@ -99,6 +104,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         if (viewType == BANNER) {
             return new BannerViewHolder(mContext, inflater.inflate(R.layout.banner_viewpager, null));
         } else if (viewType == CHANNEL) {
+            return new ChannelViewHolder(mContext, inflater.inflate(R.layout.channel_item, null));
         } else if (viewType == ACT) {
         } else if (viewType == SECKILL) {
         } else if (viewType == RECOMMEND) {
@@ -119,13 +125,16 @@ public class HomeAdapter extends RecyclerView.Adapter {
             BannerViewHolder viewHolder = (BannerViewHolder) holder;
             //绑定数据
             viewHolder.setData(result.getBanner_info());
+        } else if (getItemViewType(position) == CHANNEL) {
+            ChannelViewHolder viewHolder = (ChannelViewHolder) holder;
+            viewHolder.setData(result.getChannel_info());
         }
     }
 
     @Override
     public int getItemCount() {
         //所有的类型写完后改成6
-        return 1;
+        return 2;
     }
 
     class BannerViewHolder extends RecyclerView.ViewHolder {
@@ -166,6 +175,32 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 public void OnBannerClick(int position) {
                     int realPosition = position - 1;
                     Toast.makeText(mContext, "realPosition==" + realPosition, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    class ChannelViewHolder extends RecyclerView.ViewHolder {
+        private final Context mContext;
+        @InjectView(R.id.gv_channel)
+        GridView gvChannel;
+        ChannelAdapter channelAdapter;
+
+        public ChannelViewHolder(Context mContext, View inflate) {
+            super(inflate);
+            ButterKnife.inject(this, inflate);
+            this.mContext = mContext;
+        }
+
+        public void setData(List<HomeBean.ResultEntity.ChannelInfoEntity > channel_info) {
+            //设置GridView的适配器
+            channelAdapter = new ChannelAdapter(mContext, channel_info);
+            gvChannel.setAdapter(channelAdapter);
+            //设置item的点击事件
+            gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
                 }
             });
         }
