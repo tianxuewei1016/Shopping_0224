@@ -330,14 +330,20 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         public HotViewHolder(Context mContext, View inflate) {
             super(inflate);
-            ButterKnife.inject(this,inflate);
+            ButterKnife.inject(this, inflate);
         }
 
         public void setData(List<HomeBean.ResultEntity.HotInfoEntity> hot_info) {
             //1.设置适配器
-            adapter = new HotGridViewAdapter(mContext,hot_info);
+            adapter = new HotGridViewAdapter(mContext, hot_info);
             gvHot.setAdapter(adapter);
             //2.设置item的点击事件
+            gvHot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
