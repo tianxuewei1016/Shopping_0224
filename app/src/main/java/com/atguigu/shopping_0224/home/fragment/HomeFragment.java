@@ -1,19 +1,24 @@
 package com.atguigu.shopping_0224.home.fragment;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.base.BaseFragment;
+import com.atguigu.shopping_0224.home.bean.HomeBean;
+import com.atguigu.shopping_0224.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 /**
  * 作者：田学伟 on 2017/6/2 19:41
@@ -48,8 +53,41 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        Log.e("TAG", "主页的数据被初始化了...");
+//        Log.e("TAG", "主页的数据被初始化了...");
+        getDataFromNet();
+    }
 
+    /**
+     * 网络请求
+     */
+    private void getDataFromNet() {
+        OkHttpUtils
+                .get()
+                .url(Constants.HOME_URL)
+                .id(100)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+//                        Log.e("TAG", "联网失败==" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+//                        Log.e("TAG", "联网成功==");
+                        processData(response);
+                    }
+                });
+    }
+
+    /**
+     * 解析数据
+     * @param response
+     */
+    private void processData(String response) {
+        //使用fastjson解析json数据
+        HomeBean homeBean = JSON.parseObject(response,HomeBean.class);
+//        Log.e("TAG","解析数据成功=="+homeBean.getResult().getHot_info().get(0).getName());
     }
 
     @Override
