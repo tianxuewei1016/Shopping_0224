@@ -2,6 +2,7 @@ package com.atguigu.shopping_0224.home.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,6 +18,9 @@ import com.atguigu.shopping_0224.home.bean.GoodsBean;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
+
+import static com.atguigu.shopping_0224.R.id.ll_root;
 
 public class GoodsInfoActivity extends AppCompatActivity {
 
@@ -58,8 +62,12 @@ public class GoodsInfoActivity extends AppCompatActivity {
     TextView tvMoreHome;
     @InjectView(R.id.btn_more)
     Button btnMore;
-    @InjectView(R.id.ll_root)
+    @InjectView(ll_root)
     LinearLayout llRoot;
+    /**
+     * 得到的数据
+     */
+    private GoodsBean goodsBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,49 @@ public class GoodsInfoActivity extends AppCompatActivity {
 
     private void getData() {
         GoodsBean goodsBean = (GoodsBean) getIntent().getSerializableExtra(HomeAdapter.GOODS_BEAN);
-        Toast.makeText(this, "" + goodsBean.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "" + goodsBean.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick({R.id.ib_good_info_back, R.id.ib_good_info_more, R.id.tv_good_info_callcenter, R.id.tv_good_info_collection, R.id.tv_good_info_cart, R.id.btn_good_info_addcart, R.id.tv_more_share, R.id.tv_more_search, R.id.tv_more_home, R.id.btn_more})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ib_good_info_back:
+                finish();
+                break;
+            case R.id.ib_good_info_more:
+                //Toast.makeText(this, "更多", Toast.LENGTH_SHORT).show();
+                if (llRoot.isShown()) {
+                    llRoot.setVisibility(View.GONE);
+                } else {
+                    llRoot.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.tv_good_info_callcenter:
+                Toast.makeText(this, "客服中心", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_good_info_collection:
+                Toast.makeText(this, "收藏", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_good_info_cart:
+                Toast.makeText(this, "跳转到购物车", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_good_info_addcart:
+                Toast.makeText(this, "添加到购物车", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_more_share:
+                Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_more_search:
+                Toast.makeText(this, "搜索", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_more_home:
+                Toast.makeText(this, "主页", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_more:
+                //                Toast.makeText(this, "消失更多页面", Toast.LENGTH_SHORT).show();
+                llRoot.setVisibility(View.GONE);
+                break;
+        }
     }
 }
+
