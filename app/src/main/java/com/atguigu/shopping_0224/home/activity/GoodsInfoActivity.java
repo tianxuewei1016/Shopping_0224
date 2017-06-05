@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.home.adapter.HomeAdapter;
 import com.atguigu.shopping_0224.home.bean.GoodsBean;
+import com.atguigu.shopping_0224.shoppingcart.utils.CartStorage;
 import com.atguigu.shopping_0224.utils.Constants;
 import com.bumptech.glide.Glide;
 
@@ -155,7 +156,8 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "跳转到购物车", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_good_info_addcart:
-                Toast.makeText(this, "添加到购物车", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "添加到购物车", Toast.LENGTH_SHORT).show();
+                CartStorage.getInstance(this).addData(goodsBean);
                 break;
             case R.id.tv_more_share:
                 Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
