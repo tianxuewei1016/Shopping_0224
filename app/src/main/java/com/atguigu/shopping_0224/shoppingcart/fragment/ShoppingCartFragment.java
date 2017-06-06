@@ -76,7 +76,7 @@ public class ShoppingCartFragment extends BaseFragment {
         super.initData();
         List<GoodsBean> list = CartStorage.getInstance(mContext).getAllData();
         if (list != null && list.size() > 0) {
-            adapter = new ShoppingCartAdapter(mContext,list);
+            adapter = new ShoppingCartAdapter(mContext, list, tvShopcartTotal, checkboxAll, checkboxDeleteAll);
             //设置RecyclerView的适配器
             recyclerview.setAdapter(adapter);
             //设置布局管理器
