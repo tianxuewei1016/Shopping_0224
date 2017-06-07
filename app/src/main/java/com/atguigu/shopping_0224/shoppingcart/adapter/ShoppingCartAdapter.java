@@ -32,7 +32,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private final CheckBox checkboxAll;
     private final CheckBox checkboxDeleteAll;
 
-
     public ShoppingCartAdapter(Context mContext, List<GoodsBean> list, TextView tvShopcartTotal, CheckBox checkboxAll, CheckBox checkboxDeleteAll) {
         this.mContext = mContext;
         this.datas = list;
@@ -42,9 +41,9 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         showTotalPrice();
     }
 
-    private void showTotalPrice() {
+    public void showTotalPrice() {
         //显示总价格
-        tvShopcartTotal.setText("合计:"+getTotalPrice());
+        tvShopcartTotal.setText("合计:" + getTotalPrice());
     }
 
     /**
@@ -101,6 +100,31 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         return datas.size();
     }
 
+    public void checkAll() {
+        if (datas != null && datas.size() > 0) {
+            int number = 0;
+            for (int i = 0; i < datas.size(); i++) {
+                GoodsBean goodsBean = datas.get(i);
+                if (!goodsBean.isChecked()) {
+                    //只要有一个不勾选
+                    checkboxAll.setChecked(false);
+                    checkboxDeleteAll.setChecked(false);
+                } else {
+                    //勾选
+                    number++;
+                }
+            }
+
+            if (datas.size() == number) {
+                checkboxAll.setChecked(true);
+                checkboxDeleteAll.setChecked(true);
+            }
+        } else {
+            //没有数据
+            checkboxAll.setChecked(false);
+            checkboxDeleteAll.setChecked(false);
+        }
+    }
 
     public class MyViewHoler extends RecyclerView.ViewHolder {
         @InjectView(R.id.cb_gov)
@@ -117,6 +141,24 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public MyViewHoler(View view) {
             super(view);
             ButterKnife.inject(this, view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClickListener(v, getLayoutPosition());
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClickListener(View view, int position);
+    }
+
+    private OnItemClickListener itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener l) {
+        this.itemClickListener = l;
     }
 }
