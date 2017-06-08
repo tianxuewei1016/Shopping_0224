@@ -1,16 +1,24 @@
 package com.atguigu.shopping_0224.type.fragment;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.base.BaseFragment;
 import com.atguigu.shopping_0224.type.adapter.TypeLeftAdapter;
+import com.atguigu.shopping_0224.type.bean.TypeBean;
+import com.atguigu.shopping_0224.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.Call;
 
 /**
  * 作者：田学伟 on 2017/6/8 19:28
@@ -28,7 +36,14 @@ public class ListFragment extends BaseFragment {
     //网络请求得到数据
     private String[] titles = new String[]{"小裙子", "上衣", "下装", "外套", "配件", "包包", "装扮", "居家宅品",
             "办公文具", "数码周边", "游戏专区"};
+    //联网的url的集合
+
+    private String[] urls = new String[]{Constants.SKIRT_URL, Constants.JACKET_URL, Constants.PANTS_URL, Constants.OVERCOAT_URL,
+            Constants.ACCESSORY_URL, Constants.BAG_URL, Constants.DRESS_UP_URL, Constants.HOME_PRODUCTS_URL, Constants.STATIONERY_URL,
+            Constants.DIGIT_URL, Constants.GAME_URL};
+
     private TypeLeftAdapter leftAdapter;
+
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_list, null);
@@ -40,7 +55,7 @@ public class ListFragment extends BaseFragment {
     public void initData() {
         super.initData();
 
-        leftAdapter = new TypeLeftAdapter(mContext,titles);
+        leftAdapter = new TypeLeftAdapter(mContext, titles);
         lvLeft.setAdapter(leftAdapter);
 
         //设置item的点击事件
@@ -54,6 +69,32 @@ public class ListFragment extends BaseFragment {
             }
         });
 
+        //联网请求
+        getDataFromNet(urls[0]);
+
+    }
+
+    private void getDataFromNet(String url) {
+        OkHttpUtils.get()
+                .url(url)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("TAG", "联网失败了" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("TAG", "裙子的数据联网成功了==");
+                        processData(response);
+                    }
+                });
+    }
+
+    private void processData(String response) {
+        TypeBean typeBean = JSON.parseObject(response, TypeBean.class);
+        Toast.makeText(mContext, "" + typeBean.getResult().get(0).getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
