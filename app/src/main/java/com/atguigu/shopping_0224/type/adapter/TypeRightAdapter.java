@@ -75,6 +75,8 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HOT) {
             return new HotViewHolder(inflater.inflate(R.layout.item_hot_right, null));
+        } else if (viewType == COMMON) {
+            return new CommonViewHolder(inflater.inflate(R.layout.item_common_right, null));
         }
         return null;
     }
@@ -84,12 +86,16 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == HOT) {
             HotViewHolder viewHolder = (HotViewHolder) holder;
             viewHolder.setData(hot_product_list);
+        } else if (getItemViewType(position) == COMMON) {
+            CommonViewHolder viewHolder = (CommonViewHolder) holder;
+            int realPostion = position - 1;
+            viewHolder.setData(child.get(realPostion));
         }
     }
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 1 + child.size();
     }
 
     class HotViewHolder extends RecyclerView.ViewHolder {
@@ -153,6 +159,37 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                 });
 
             }
+        }
+    }
+
+    class CommonViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.iv_ordinary_right)
+        ImageView ivOrdinaryRight;
+        @InjectView(R.id.tv_ordinary_right)
+        TextView tvOrdinaryRight;
+        @InjectView(R.id.ll_root)
+        LinearLayout llRoot;
+
+        public CommonViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.inject(this, itemView);
+        }
+
+
+        public void setData(final TypeBean.ResultEntity.ChildEntity childEntity) {
+            //1.请求图片
+            Glide.with(mContext)
+                    .load(Constants.BASE_URL_IMAGE + childEntity.getPic())
+                    .into(ivOrdinaryRight);
+            //2.设置文本
+            tvOrdinaryRight.setText(childEntity.getName());
+
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "" + childEntity.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
