@@ -1,8 +1,12 @@
 package com.atguigu.shopping_0224.community.fragment;
 
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.atguigu.shopping_0224.R;
@@ -29,6 +33,8 @@ public class CommunityFragment extends BaseFragment {
     ImageButton ibCommunityMessage;
     @InjectView(R.id.view_pager)
     ViewPager viewPager;
+    @InjectView(R.id.tablayout)
+    TabLayout tablayout;
 
     private ArrayList<BaseFragment> fragments;
     private CommunityViewPagerAdapter adapter;
@@ -52,6 +58,10 @@ public class CommunityFragment extends BaseFragment {
         //设置适配器
         adapter = new CommunityViewPagerAdapter(getFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
+
+        //关联ViewPager
+        tablayout.setupWithViewPager(viewPager);
+        tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void initFragment() {
@@ -74,5 +84,13 @@ public class CommunityFragment extends BaseFragment {
             case R.id.ib_community_message:
                 break;
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.inject(this, rootView);
+        return rootView;
     }
 }
