@@ -6,10 +6,13 @@ import android.widget.ListView;
 import com.alibaba.fastjson.JSON;
 import com.atguigu.shopping_0224.R;
 import com.atguigu.shopping_0224.base.BaseFragment;
+import com.atguigu.shopping_0224.community.adapter.NewPostListViewAdapter;
 import com.atguigu.shopping_0224.community.bean.NewPostBean;
 import com.atguigu.shopping_0224.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,6 +29,7 @@ public class NewPostFragment extends BaseFragment {
 
     @InjectView(R.id.lv_new_post)
     ListView lvNewPost;
+    private NewPostListViewAdapter adapter;
 
     @Override
     public View initView() {
@@ -62,6 +66,12 @@ public class NewPostFragment extends BaseFragment {
 
     private void processData(String json) {
         NewPostBean bean = JSON.parseObject(json, NewPostBean.class);
+        List<NewPostBean.ResultEntity> result = bean.getResult();
+        if(result!=null&&result.size()>0) {
+            //设置适配器
+            adapter = new NewPostListViewAdapter(mContext,result);
+            lvNewPost.setAdapter(adapter);
+        }
     }
 
     @Override
